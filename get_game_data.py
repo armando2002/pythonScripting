@@ -50,6 +50,16 @@ def copy_and_overwrite(source, dest):
     shutil.copytree(source, dest)
 
 
+def make_json_metadata_file(path, game_dirs):
+    data = {
+        "gameNames": game_dirs,
+        "numberOfGames": len(game_dirs)
+    }
+    # write into a json file
+    with open(path, "w") as f:
+        json.dump(data, f)
+
+
 def main(source, target):
     # get current working directory (where the python file was run from)
     cwd = os.getcwd()
@@ -67,8 +77,10 @@ def main(source, target):
     for src, dest in zip(game_paths, new_game_dirs):
         dest_path = os.path.join(target_path, dest)
         copy_and_overwrite(src, dest_path)
-
-
+    # set the path for the JSON to be with in the target directory
+    json_path = os.path.join(target_path, "metadata.json")
+    # make the JSON file
+    make_json_metadata_file(json_path, new_game_dirs)
 
 
 # grab the command line arguments only if this program is being run directly, not imported
