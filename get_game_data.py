@@ -42,6 +42,14 @@ def create_dir(path):
         os.mkdir(path)
 
 
+def copy_and_overwrite(source, dest):
+    if os.path.exists(dest):
+        # remove destination folder using remove tree
+        shutil.rmtree(dest)
+    # copy the tree
+    shutil.copytree(source, dest)
+
+
 def main(source, target):
     # get current working directory (where the python file was run from)
     cwd = os.getcwd()
@@ -50,10 +58,17 @@ def main(source, target):
     target_path = os.path.join(cwd, target)
 
     game_paths = find_all_game_dirs(source_path)
-    new_game_dirs = get_name_from_paths(game_paths, "game")
-    print(new_game_dirs)
-
+    new_game_dirs = get_name_from_paths(game_paths, "_game")
+    # create directory
     create_dir(target_path)
+
+    # loop through the source and destination paths
+    # zip takes matching elements from 2 arrays and puts them together in a tuple
+    for src, dest in zip(game_paths, new_game_dirs):
+        dest_path = os.path.join(target_path, dest)
+        copy_and_overwrite(src, dest_path)
+
+
 
 
 # grab the command line arguments only if this program is being run directly, not imported
