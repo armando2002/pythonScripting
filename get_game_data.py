@@ -26,6 +26,22 @@ def find_all_game_dirs(source):
     return game_paths
 
 
+def get_name_from_paths(paths, to_strip):
+    new_names = []
+    for path in paths:
+        _, dir_name = os.path.split(path)
+        new_dir_name = dir_name.replace(to_strip, "")
+        new_names.append(new_dir_name)
+
+    return new_names
+
+
+def create_dir(path):
+    # if directory doesn't exist, create it
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+
 def main(source, target):
     # get current working directory (where the python file was run from)
     cwd = os.getcwd()
@@ -34,7 +50,10 @@ def main(source, target):
     target_path = os.path.join(cwd, target)
 
     game_paths = find_all_game_dirs(source_path)
-    print(game_paths)
+    new_game_dirs = get_name_from_paths(game_paths, "game")
+    print(new_game_dirs)
+
+    create_dir(target_path)
 
 
 # grab the command line arguments only if this program is being run directly, not imported
